@@ -35,6 +35,15 @@ export default {
     };
   },
   created() {
+    this.$store.commit(
+      "setFromDate",
+      new Date(
+        new Date().getFullYear() - 1,
+        new Date().getMonth(),
+        new Date().getDate()
+      )
+    );
+    this.$store.commit("setToDate", new Date());
     eventBus.$on("showLoader", () => {
       this.loading = true;
     });

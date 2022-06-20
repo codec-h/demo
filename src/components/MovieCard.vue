@@ -1,40 +1,20 @@
 <template>
   <div class="movie-card" @click="route(movieId)" :to="'/movie/' + movieId">
-    <!-- <div
-        
-        style="background: :url(moviePosterURL); background-size: cover"
-      > -->
     <img class="movie-header" :src="moviePosterURL" />
-    <!-- <div class="header-icon-container">something icon</div> -->
-    <!-- </div> -->
-    <!--movie-header-->
     <div class="movie-content">
-      <div class="movie-content-header">
-        <!-- <h3 class="movie-title">{{ movieName }}</h3> -->
-        <!-- <a href="#">
-        </a> -->
-      </div>
+      <div class="movie-content-header"></div>
       <div class="movie-info">
-        <!--Date Released-->
         <div class="info-section">
           <label>Date Released</label>
           <span>{{ formatDate(new Date(releaseDate)) }}</span>
         </div>
-        <!-- Popularity -->
         <div class="info-section">
           <label>Popularity</label>
           <span>{{ popularity }}%</span>
         </div>
-        <!--screen-->
-        <div class="info-section">
-          <label>Row</label>
-          <span>F</span>
-        </div>
       </div>
     </div>
-    <!--movie-content-->
   </div>
-  <!--container-->
 </template>
 
 <script>
@@ -120,6 +100,7 @@ export default {
   opacity: 1;
 }
 .movie-card:hover {
+  cursor: pointer;
   transform: scale(1.03);
   box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.08);
 }

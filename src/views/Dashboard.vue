@@ -2,7 +2,9 @@
   <div class="container pt-2">
     <div class="heading-container row">
       <div class="col-sm-6">
-        <h3 style="text-align: left">Top Rated movies</h3>
+        <h4 style="text-align: left" class="text-muted">
+          <strong>Top Rated movies</strong>
+        </h4>
       </div>
       <div class="col-sm-6 d-flex justify-content-flex-end">
         <button v-b-modal.modal-xl class="btn btn-color ml-auto">
@@ -22,7 +24,10 @@
         <li><a @click="NavigateToLastPage">»</a></li>
       </ul>
     </div>
-    <div class="row pr-3 pl-3">
+    <div
+      v-if="this.movies !== undefined && this.movies.length !== 0"
+      class="row pr-3 pl-3 w-100"
+    >
       <div
         class="col-sm-6 col-md-4 col-lg-3 col-xl-2 hover-blank-color"
         v-for="movie in this.movies"
@@ -41,25 +46,47 @@
         />
       </div>
     </div>
+    <div v-else class="col-sm-12 col-lg-12 col-md-12 col-xl-12">
+      <img src="../assets/notfound.png" class="responsive" />
+      <h5 class="text-muted">
+        Oops! Looks like that is an extraordinary filter date combination. Let's
+        try some other date! :)
+      </h5>
+    </div>
     <b-modal
       id="modal-xl"
       size="xl"
       title="Filter on Date Released"
       :no-close-on-backdrop="true"
-      ><label for="example-datepicker">Choose a date</label
-      ><b-form-datepicker
-        id="example-datepicker"
-        v-model="fromDate"
-        class="mb-2"
-      ></b-form-datepicker>
+    >
+      <div class="row">
+        <div class="col-sm-6">
+          <label for="fromdatepicker">Select from date</label
+          ><b-form-datepicker
+            id="fromdatepicker"
+            v-model="fromDate"
+            :max="new Date()"
+            class="mb-2 datePicker"
+          ></b-form-datepicker>
+        </div>
+        <div class="col-sm-6">
+          <label for="todatepicker">Select to date</label
+          ><b-form-datepicker
+            id="todatepicker"
+            v-model="toDate"
+            :min="fromDate"
+            :max="new Date()"
+            class="mb-2 datePicker"
+          ></b-form-datepicker>
+        </div>
+      </div>
       <template #modal-footer="{ ok, cancel }">
-        <!-- Emulate built in modal footer ok and cancel button actions -->
         <b-button
           size="sm"
           variant="success"
           @click="
             () => {
-              filterData();
+              NavigateToFirstPage();
               ok();
             }
           "
@@ -69,7 +96,6 @@
         <b-button size="sm" variant="danger" @click="cancel()">
           Cancel
         </b-button>
-        <!-- Button with custom close trigger value -->
       </template>
     </b-modal>
   </div>
@@ -90,12 +116,21 @@ export default {
       pageNumbers: [],
       paginationTopLimit: 500,
       paginationBottomLimit: 1,
-      fromDate: new Date(),
-      toDate: new Date(),
+      toDate: this.$toDate,
+      fromDate: this.$fromDate,
     };
+  },
+  watch: {
+    fromDate() {
+      this.toDate = new Date();
+    },
   },
   methods: {
     async NavigateToFirstPage() {
+      this.$fromDate = this.fromDate;
+      this.$toDate = this.toDate;
+      this.$store.commit("setFromDate", this.fromDate);
+      this.$store.commit("setToDate", this.toDate);
       await this.NavigateToSelectedPage(this.paginationBottomLimit);
     },
     async NavigateToLastPage() {
@@ -103,7 +138,6 @@ export default {
     },
     async NavigateToSelectedPage(page) {
       eventBus.$emit("showLoader");
-      this.FillPageNumbers(page - 3, page + 3);
       await this.FetchMovies(page);
       let selectedOldPageNumber = document.getElementById(this.selectedPage);
       if (selectedOldPageNumber != undefined)
@@ -116,12 +150,31 @@ export default {
       eventBus.$emit("hideLoader");
     },
     async FetchMovies(page) {
-      fetch(
-        "https://api.themoviedb.org/3/movie/top_rated?api_key=11004c5dda64d0bae607c7af2636e983&language=en-US&page=" +
-          page
+      await fetch(
+        this.$apiBaseUrl +
+          "top_rated?api_key=" +
+          this.$apiToken +
+          "&language=en-US&page=" +
+          page +
+          "&primary_release_date.gte=" +
+          this.FormatDate(this.fromDate) +
+          "&primary_release_date.lte=" +
+          this.FormatDate(this.toDate)
       )
         .then((_) => _.json())
-        .then((data) => (this.movies = data.results));
+        .then((data) => {
+          this.movies = data.results;
+          this.paginationTopLimit = data.total_pages;
+          if (this.paginationTopLimit === 0) this.paginationTopLimit = 1;
+          this.FillPageNumbers(page - 3, page + 3);
+        });
+    },
+    FormatDate(value) {
+      let date = new Date(value);
+      const day = date.toLocaleString("default", { day: "2-digit" });
+      const month = date.toLocaleString("default", { month: "2-digit" });
+      const year = date.toLocaleString("default", { year: "numeric" });
+      return year + "-" + month + "-" + day;
     },
     FillPageNumbers(start, end) {
       this.pageNumbers = [];
@@ -130,14 +183,17 @@ export default {
         end = this.paginationBottomLimit + 6;
       }
       if (end > this.paginationTopLimit) {
-        start = this.paginationTopLimit - 6;
         end = this.paginationTopLimit;
+        if (end <= 7) start = this.paginationBottomLimit;
+        else start = end - 7;
       }
       for (let iterator = start; iterator <= end; iterator++)
         this.pageNumbers.push(iterator);
     },
   },
-  async created() {
+  async mounted() {
+    this.fromDate = this.$store.state.fromDate;
+    this.toDate = this.$store.state.toDate;
     this.FillPageNumbers(
       this.paginationBottomLimit,
       this.paginationBottomLimit + 6
@@ -148,6 +204,13 @@ export default {
 </script>
 
 <style scoped>
+.responsive {
+  max-width: 50%;
+  height: auto;
+}
+.datePicker {
+  height: 40px;
+}
 .pagination-div {
   width: 100%;
   display: flex;
@@ -176,7 +239,6 @@ export default {
   cursor: pointer;
 }
 
-/* Active and Hoverable Pagination */
 #pagination li a {
   border-radius: 5px;
   -webkit-transition: background-color 0.3s;
@@ -206,38 +268,6 @@ export default {
 .hover-blank-color:hover {
   text-decoration: none;
   color: gray;
-}
-.dropdown {
-  position: relative;
-  height: 0;
-  overflow: hidden;
-  transition: height 3s;
-}
-.dropdown::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 1rem;
-  background-image: linear-gradient(to top, white, rgba(255, 255, 255, 0));
-}
-.dropdown-enter,
-.dropdown-leave-to {
-  opacity: 0;
-}
-.dropdown-leave,
-.dropdown-enter-to {
-  opacity: 1;
-}
-.dropdown-enter-active,
-.dropdown-leave-active {
-  position: absolute;
-  width: 100%;
-  transition: opacity 3s ease-in-out;
-}
-.dropdown-enter-active {
-  transition-delay: 3s;
 }
 .modal {
   width: 100vw;

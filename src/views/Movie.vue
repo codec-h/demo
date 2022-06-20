@@ -10,7 +10,6 @@
           ')',
       }"
     >
-      <div>The</div>
       <div class="container">
         <div
           class="row blurb scrollme animateme"
@@ -21,7 +20,7 @@
           data-translatey="100"
         >
           <div class="col-md-9">
-            <span class="title">{{
+            <span class="title" v-if="this.movieDetail.genres !== undefined">{{
               this.movieDetail.genres.map((_) => _.name).join()
             }}</span>
             <h1>{{ this.movieDetail.title }}</h1>
@@ -29,13 +28,17 @@
               {{ this.movieDetail.overview }}
             </p>
             <div class="buttons">
-              <span class="certificate">{{
-                this.movieDetail.original_language.toUpperCase()
-              }}</span>
-              <!-- <button class="btn btn-default">
-                <i class="fa fa-heart" aria-hidden="true"></i>
-                Add to favorite
-              </button> -->
+              <span
+                class="certificate"
+                v-if="this.movieDetail.original_language !== undefined"
+                >{{ this.movieDetail.original_language.toUpperCase() }}</span
+              >
+              <span style="color: white">
+                <b-icon-currency-dollar scale="1.2"></b-icon-currency-dollar>
+                {{
+                  convertToInternationalCurrencySystem(this.movieDetail.budget)
+                }}
+              </span>
             </div>
           </div>
         </div>
@@ -43,10 +46,16 @@
     </div>
     <div class="row mt-4 row-margin">
       <div class="col-sm-12 mt-4">
-        <h2 class="heading">Trailer & Clips</h2>
-        <div class="row pr-3 pl-3 card-deck">
+        <h2 class="heading"><strong>Videos</strong></h2>
+        <div
+          class="row pr-3 pl-3 card-deck"
+          v-if="
+            this.movieTrailerDetail !== undefined &&
+            this.movieTrailerDetail.length !== 0
+          "
+        >
           <div
-            class="col-sm-6 col-md-4 col-lg-3 col-xl-2"
+            class="col-sm-6 col-md-4 col-lg-3 col-xl-2 ca"
             v-for="trailer in this.movieTrailerDetail"
             :key="trailer.key"
             @click="viewTrailer(trailer.key)"
@@ -54,34 +63,26 @@
             <div class="card pr-2 pl-2" style="margin: 10px">
               <img
                 class="card-img-top thumbnail"
-                @error="setErrorImg"
                 :src="
-                  'https://img.youtube.com/vi/' +
-                  trailer.key +
-                  '/maxresdefault.jpg'
+                  'https://img.youtube.com/vi/' + trailer.key + '/mqdefault.jpg'
                 "
                 :alt="trailer.name"
               />
               <div class="card-body">
                 <h5 class="card-title">{{ trailer.name }}</h5>
               </div>
-              <div
-                class="card-footer button-play"
-                @click="viewTrailer(trailer.key)"
-              >
-                <b-icon-youtube
-                  style="color: red"
-                  class="mr-2"
-                ></b-icon-youtube>
-                Watch Now
-              </div>
             </div>
           </div>
         </div>
+        <div v-else class="col-sm-12 col-lg-12 col-md-12 col-xl-12">
+          <img src="../assets/notfound.png" class="responsive" />
+          <h5 class="text-muted">
+            Oops! Looks like that is an extraordinary filter date combination.
+            Let's try some other date! :)
+          </h5>
+        </div>
       </div>
     </div>
-
-    <!-- copy this stuff and down -->
     <div id="video-popup-overlay" v-if="showTrailer"></div>
     <div id="video-popup-container" v-if="showTrailer">
       <div class="d-flex justify-content-end close">
@@ -100,7 +101,6 @@
         style="border-radius: 7px;width=100%"
         :src="'https://www.youtube.com/watch?v=' + this.selectedTrailer"
       />
-      <!-- <div id="video-popup-iframe-container"></div> -->
     </div>
   </div>
 </template>
@@ -112,6 +112,9 @@ export default {
   name: "Movie",
   components: { LazyYoutube },
   mounted() {},
+  beforeDestroy() {
+    window.removeEventListener("error", () => {});
+  },
   created() {
     eventBus.$emit("showLoader");
     fetch(
@@ -127,9 +130,18 @@ export default {
       });
   },
   methods: {
-    setErrorImg(event) {
-      console.log("Setting");
-      event.target.src = "https://img.youtube.com/vi/" + "/default.jpg";
+    convertToInternationalCurrencySystem(labelValue) {
+      // Nine Zeroes for Billions
+      if (labelValue === undefined || labelValue === 0) return "Not available";
+      return Math.abs(Number(labelValue)) >= 1.0e9
+        ? (Math.abs(Number(labelValue)) / 1.0e9).toFixed(2) + " Billion"
+        : // Six Zeroes for Millions
+        Math.abs(Number(labelValue)) >= 1.0e6
+        ? (Math.abs(Number(labelValue)) / 1.0e6).toFixed(2) + " Million"
+        : // Three Zeroes for Thousands
+        Math.abs(Number(labelValue)) >= 1.0e3
+        ? (Math.abs(Number(labelValue)) / 1.0e3).toFixed(2) + " Thousand"
+        : Math.abs(Number(labelValue));
     },
     viewTrailer(trailerKey) {
       this.selectedTrailer = trailerKey;
@@ -140,7 +152,7 @@ export default {
     },
     getMovieTrailerDetail(movieId) {
       fetch(
-        "https://api.themoviedb.org/3/movie/" +
+        this.$apiBaseUrl +
           movieId +
           "/videos?api_key=11004c5dda64d0bae607c7af2636e983&language=en-US"
       )
@@ -182,6 +194,7 @@ export default {
   z-index: 1500;
   color: white;
   cursor: pointer;
+  font-size: 45px;
 }
 @media (min-width: 1400px) {
   #video-popup-container {
@@ -193,7 +206,7 @@ export default {
     right: 0;
     margin-left: auto;
     margin-right: auto;
-    width: 60%; /* Need a specific value to work */
+    width: 60%;
     background-color: rgba(255, 255, 255, 0);
   }
 }
@@ -207,7 +220,7 @@ export default {
     right: 0;
     margin-left: auto;
     margin-right: auto;
-    width: 80%; /* Need a specific value to work */
+    width: 80%;
     background-color: rgba(255, 255, 255, 0);
   }
 }
@@ -265,11 +278,8 @@ export default {
 
 @import url("https://fonts.googleapis.com/css?family=Poppins");
 @import url("https://fonts.googleapis.com/css?family=Montserrat");
-.card-img-top {
-  border-radius: 7px;
-}
 .card-deck {
-  padding: 40px;
+  padding: 0px 20px 0px 20px;
   justify-content: left;
 }
 .card-footer {
@@ -278,6 +288,10 @@ export default {
 .card-deck .card {
   margin: 0 0 1rem;
   padding: 15px;
+}
+.card:hover {
+  transform: scale(1.03);
+  box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.08);
 }
 .card-title {
   font-size: 14px;
@@ -305,6 +319,12 @@ export default {
   .thumbnail {
     max-height: 160px;
   }
+  .ca {
+    max-height: 330px;
+  }
+  .ca .card {
+    max-height: 180px;
+  }
 }
 
 @media (min-width: 1500px) {
@@ -315,11 +335,17 @@ export default {
   .thumbnail {
     max-height: 180px;
   }
+  .ca {
+    max-height: 330px;
+  }
+  .ca .card {
+    max-height: 180px;
+  }
 }
 
 .heading {
   text-align: start;
-  padding: 5px 20px;
+  padding: 0px 20px;
 }
 .clip-title {
   text-align: center;
@@ -328,13 +354,19 @@ export default {
 .card-wrap {
   flex: 0 0 33.333%;
   display: flex;
-  padding: 10px; /* gutter width */
+  padding: 10px;
 }
 
 .card {
   padding: 20px;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  box-shadow: none !important;
+  border: none !important;
   flex: 0 1 100% !important;
+}
+.card-body {
+  padding-top: 10px;
+  text-align: start;
 }
 .row > [class*="col-"] {
   display: flex;
