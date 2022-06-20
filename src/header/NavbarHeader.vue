@@ -4,7 +4,10 @@
       <div class="row">
         <div class="col-12">
           <nav class="navbar navbar-expand-md navbar-light">
-            <router-link to="/" class="navbar-brand">Critics </router-link>
+            <router-link to="/" class="navbar-brand"
+              ><b-icon-film scale="1.7" style="color: #fc7b54"></b-icon-film
+              ><span class="ml-3" style="color: #fc7b54">Critics</span>
+            </router-link>
 
             <button
               class="navbar-toggler"
@@ -22,7 +25,12 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="navbar-nav ml-auto py-4 py-md-0">
                 <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
-                  <router-link to="/" class="nav-link">Home</router-link>
+                  <router-link
+                    to="/"
+                    active-class="active-menu"
+                    class="nav-link"
+                    >Home</router-link
+                  >
                 </li>
               </ul>
             </div>
@@ -77,8 +85,12 @@ export default {
   top: 0;
   left: 0;
   z-index: 1000;
+  height: 60px;
   -webkit-transition: all 0.3s ease-out;
   transition: all 0.3s ease-out;
+}
+.navigation-wrap .container {
+  margin-top: -10px;
 }
 .navbar {
   padding: 0;
@@ -96,32 +108,15 @@ export default {
   border: none;
   padding-right: 0;
 }
+.active-menu {
+  color: white !important;
+  background-color: #fc7b54;
+  border-radius: 10px;
+  padding: 7px 10px !important;
+}
 .navbar-toggler:active,
 .navbar-toggler:focus {
   outline: none;
-}
-.navbar-light .navbar-toggler-icon {
-  width: 24px;
-  height: 17px;
-  background-image: none;
-  position: relative;
-  border-bottom: 1px solid #000;
-  transition: all 300ms linear;
-}
-.navbar-light .navbar-toggler-icon:after,
-.navbar-light .navbar-toggler-icon:before {
-  width: 24px;
-  position: absolute;
-  height: 1px;
-  background-color: #000;
-  top: 0;
-  left: 0;
-  content: "";
-  z-index: 2;
-  transition: all 300ms linear;
-}
-.navbar-light .navbar-toggler-icon:after {
-  top: 8px;
 }
 .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon:after {
   transform: rotate(45deg);
@@ -133,39 +128,14 @@ export default {
   border-color: transparent;
 }
 .nav-link {
-  color: #212121 !important;
   font-weight: 500;
   transition: all 200ms linear;
 }
-.nav-item:hover .nav-link {
-  color: #8167a9 !important;
-}
-.nav-item.active .nav-link {
-  color: #777 !important;
-}
 .nav-link {
   position: relative;
-  padding: 5px 0 !important;
   display: inline-block;
 }
-.nav-item:after {
-  position: absolute;
-  bottom: -5px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  content: "";
-  background-color: #8167a9;
-  opacity: 0;
-  transition: all 200ms linear;
-}
-.nav-item:hover:after {
-  bottom: 0;
-  opacity: 1;
-}
-.nav-item.active:hover:after {
-  opacity: 0;
-}
+
 .nav-item {
   position: relative;
   transition: all 200ms linear;

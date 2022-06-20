@@ -1,7 +1,26 @@
 <template>
   <div class="container pt-2">
-    <div class="heading-container">
-      <h3 style="text-align: left">Top Rated movies</h3>
+    <div class="heading-container row">
+      <div class="col-sm-6">
+        <h3 style="text-align: left">Top Rated movies</h3>
+      </div>
+      <div class="col-sm-6 d-flex justify-content-flex-end">
+        <button v-b-modal.modal-xl class="btn btn-color ml-auto">
+          <b-icon-filter scale="2"></b-icon-filter
+          ><span class="pl-3">Filter</span>
+        </button>
+      </div>
+    </div>
+    <div class="pb-4 pt-2 pagination-div">
+      <ul id="pagination">
+        <li><a class="" @click="NavigateToFirstPage">«</a></li>
+        <li v-for="pageNumber in pageNumbers" :key="pageNumber">
+          <a :id="pageNumber" @click="NavigateToSelectedPage(pageNumber)">{{
+            pageNumber
+          }}</a>
+        </li>
+        <li><a @click="NavigateToLastPage">»</a></li>
+      </ul>
     </div>
     <div class="row pr-3 pl-3">
       <div
@@ -22,11 +41,43 @@
         />
       </div>
     </div>
+    <b-modal
+      id="modal-xl"
+      size="xl"
+      title="Filter on Date Released"
+      :no-close-on-backdrop="true"
+      ><label for="example-datepicker">Choose a date</label
+      ><b-form-datepicker
+        id="example-datepicker"
+        v-model="fromDate"
+        class="mb-2"
+      ></b-form-datepicker>
+      <template #modal-footer="{ ok, cancel }">
+        <!-- Emulate built in modal footer ok and cancel button actions -->
+        <b-button
+          size="sm"
+          variant="success"
+          @click="
+            () => {
+              filterData();
+              ok();
+            }
+          "
+        >
+          Filter
+        </b-button>
+        <b-button size="sm" variant="danger" @click="cancel()">
+          Cancel
+        </b-button>
+        <!-- Button with custom close trigger value -->
+      </template>
+    </b-modal>
   </div>
 </template>
 
 <script>
 import MovieCard from "../components/MovieCard.vue";
+import { eventBus } from "../main";
 export default {
   name: "Dashboard",
   components: { MovieCard },
@@ -35,19 +86,110 @@ export default {
       modal: false,
       dropdown: { height: 0 },
       movies: [],
+      selectedPage: 1,
+      pageNumbers: [],
+      paginationTopLimit: 500,
+      paginationBottomLimit: 1,
+      fromDate: new Date(),
+      toDate: new Date(),
     };
   },
-  created() {
-    fetch(
-      "https://api.themoviedb.org/3/movie/top_rated?api_key=11004c5dda64d0bae607c7af2636e983&language=en-US&page=1"
-    )
-      .then((_) => _.json())
-      .then((data) => (this.movies = data.results));
+  methods: {
+    async NavigateToFirstPage() {
+      await this.NavigateToSelectedPage(this.paginationBottomLimit);
+    },
+    async NavigateToLastPage() {
+      await this.NavigateToSelectedPage(this.paginationTopLimit);
+    },
+    async NavigateToSelectedPage(page) {
+      eventBus.$emit("showLoader");
+      this.FillPageNumbers(page - 3, page + 3);
+      await this.FetchMovies(page);
+      let selectedOldPageNumber = document.getElementById(this.selectedPage);
+      if (selectedOldPageNumber != undefined)
+        selectedOldPageNumber.classList.remove("active");
+
+      let selectedPageNumber = document.getElementById(page);
+      if (selectedPageNumber != undefined)
+        selectedPageNumber.classList.add("active");
+      this.selectedPage = page;
+      eventBus.$emit("hideLoader");
+    },
+    async FetchMovies(page) {
+      fetch(
+        "https://api.themoviedb.org/3/movie/top_rated?api_key=11004c5dda64d0bae607c7af2636e983&language=en-US&page=" +
+          page
+      )
+        .then((_) => _.json())
+        .then((data) => (this.movies = data.results));
+    },
+    FillPageNumbers(start, end) {
+      this.pageNumbers = [];
+      if (start < this.paginationBottomLimit) {
+        start = this.paginationBottomLimit;
+        end = this.paginationBottomLimit + 6;
+      }
+      if (end > this.paginationTopLimit) {
+        start = this.paginationTopLimit - 6;
+        end = this.paginationTopLimit;
+      }
+      for (let iterator = start; iterator <= end; iterator++)
+        this.pageNumbers.push(iterator);
+    },
+  },
+  async created() {
+    this.FillPageNumbers(
+      this.paginationBottomLimit,
+      this.paginationBottomLimit + 6
+    );
+    await this.NavigateToFirstPage();
   },
 };
 </script>
 
 <style scoped>
+.pagination-div {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+.page-header {
+  text-align: center;
+  font-size: 1.5em;
+  font-weight: normal;
+  border-bottom: 1px solid #ddd;
+  margin: 30px 0;
+}
+#pagination {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+#pagination li {
+  display: inline;
+}
+#pagination li a {
+  display: inline-block;
+  text-decoration: none;
+  padding: 5px 10px;
+  color: #000;
+  cursor: pointer;
+}
+
+/* Active and Hoverable Pagination */
+#pagination li a {
+  border-radius: 5px;
+  -webkit-transition: background-color 0.3s;
+  transition: background-color 0.3s;
+}
+#pagination li a.active {
+  background-color: #fc7b54;
+  color: #fff;
+}
+#pagination li a:hover:not(.active) {
+  background-color: #ddd;
+}
+
 .heading-container {
   width: 100%;
   padding: 10px;

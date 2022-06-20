@@ -1,5 +1,5 @@
 <template>
-  <div v-if="this.movieDetail != undefined">
+  <div v-if="this.movieDetail !== undefined">
     <div
       id="content_hero"
       class="center-content hero-ontop"
@@ -10,6 +10,7 @@
           ')',
       }"
     >
+      <div>The</div>
       <div class="container">
         <div
           class="row blurb scrollme animateme"
@@ -28,11 +29,13 @@
               {{ this.movieDetail.overview }}
             </p>
             <div class="buttons">
-              <span class="certificate">PG</span>
-              <button class="btn btn-default">
+              <span class="certificate">{{
+                this.movieDetail.original_language.toUpperCase()
+              }}</span>
+              <!-- <button class="btn btn-default">
                 <i class="fa fa-heart" aria-hidden="true"></i>
                 Add to favorite
-              </button>
+              </button> -->
             </div>
           </div>
         </div>
@@ -51,6 +54,7 @@
             <div class="card pr-2 pl-2" style="margin: 10px">
               <img
                 class="card-img-top thumbnail"
+                @error="setErrorImg"
                 :src="
                   'https://img.youtube.com/vi/' +
                   trailer.key +
@@ -103,10 +107,13 @@
 
 <script>
 import { LazyYoutube } from "vue-lazytube";
+import { eventBus } from "../main";
 export default {
   name: "Movie",
   components: { LazyYoutube },
+  mounted() {},
   created() {
+    eventBus.$emit("showLoader");
     fetch(
       "https://api.themoviedb.org/3/movie/" +
         this.$route.params.id +
@@ -116,9 +123,14 @@ export default {
       .then((_) => {
         this.movieDetail = _;
         this.getMovieTrailerDetail(this.movieDetail.id);
+        eventBus.$emit("hideLoader");
       });
   },
   methods: {
+    setErrorImg(event) {
+      console.log("Setting");
+      event.target.src = "https://img.youtube.com/vi/" + "/default.jpg";
+    },
     viewTrailer(trailerKey) {
       this.selectedTrailer = trailerKey;
       this.showTrailer = true;

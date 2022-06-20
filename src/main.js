@@ -13,10 +13,14 @@ import Movie from "./views/Movie.vue"
 
 
 Vue.config.productionTip = false
+Vue.prototype.$loading = false;
+
 
 Vue.use(BootstrapVue)
 Vue.use(BootstrapVueIcons)
 Vue.use(VueRouter)
+
+export const eventBus = new Vue();
 
 const routes = [
     { path: '/', component: Dashboard },
