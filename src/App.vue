@@ -1,19 +1,22 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <NavbarHeader class="mb-4" />
+    <div id="body">
+      <router-view></router-view>
+      <!-- <HelloWorld msg="Welcome to Your Vue.js App" /> -->
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import NavbarHeader from "./header/NavbarHeader.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    NavbarHeader,
+  },
+};
 </script>
 
 <style>
@@ -25,4 +28,13 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+/* .row {
+  margin: 0 !important;
+} */
+/* @media(max-width:500px) {
+  #body{
+    padding-top: 60px;
+  }
+  
+} */
 </style>
