@@ -1,15 +1,10 @@
 <template>
   <div class="navigation-wrap bg-light start-header start-style">
-    <div class="pl-4 pr-4">
+    <div class="container">
       <div class="row">
         <div class="col-12">
           <nav class="navbar navbar-expand-md navbar-light">
-            <a
-              class="navbar-brand ml-auto"
-              href="http://localhost:8081/"
-              target="_blank"
-              >BeLive Movie Critic</a
-            >
+            <router-link to="/" class="navbar-brand">Critics </router-link>
 
             <button
               class="navbar-toggler"
@@ -27,17 +22,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="navbar-nav ml-auto py-4 py-md-0">
                 <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
-                  <router-link
-                    to="/"
-                    name="Home"
-                    class="nav-link dropdown-toggle"
-                    data-toggle="dropdown"
-                    href="#"
-                    role="button"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                    >Home</router-link
-                  >
+                  <router-link to="/" class="nav-link">Home</router-link>
                 </li>
               </ul>
             </div>
@@ -193,71 +178,18 @@ export default {
   background-color: #fff !important;
   transition: all 200ms linear;
 }
-.nav-item .dropdown-menu {
-  transform: translate3d(0, 10px, 0);
-  visibility: hidden;
-  opacity: 0;
-  max-height: 0;
+.section {
+  position: relative;
+  width: 100%;
   display: block;
-  padding: 0;
-  margin: 0;
-  transition: all 200ms linear;
 }
-.nav-item.show .dropdown-menu {
-  opacity: 1;
-  visibility: visible;
-  max-height: 999px;
-  transform: translate3d(0, 0px, 0);
+.full-height {
+  height: 100vh;
 }
-
-.dropdown-toggle::after {
-  display: none;
+.over-hide {
+  overflow: hidden;
 }
-/* #Media
-================================================== */
-
-@media (max-width: 767px) {
-  h1 {
-    font-size: 38px;
-  }
-  .nav-item:after {
-    display: none;
-  }
-  .dropdown-toggle[aria-expanded="true"]::after {
-    transform: rotate(90deg);
-    opacity: 0;
-  }
-  .dropdown-menu {
-    padding: 0 !important;
-    background-color: transparent;
-    box-shadow: none;
-    transition: all 200ms linear;
-  }
-  .dropdown-toggle[aria-expanded="true"] + .dropdown-menu {
-    margin-top: 10px !important;
-    margin-bottom: 20px !important;
-  }
-}
-
-/* #Link to page
-================================================== */
-
-.logo {
-  position: absolute;
-  bottom: 30px;
-  right: 30px;
-  display: block;
-  z-index: 100;
-  transition: all 250ms linear;
-}
-.logo img {
-  height: 26px;
-  width: auto;
-  display: block;
-  filter: brightness(10%);
-  transition: all 250ms linear;
-}
-body.dark .logo img {
-  filter: brightness(100%);
+.row {
+  margin: 0 !important;
 }
 </style>

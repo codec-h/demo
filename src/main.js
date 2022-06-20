@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import App from './App.vue'
 
 
-import { BIconPlayBtnFill, BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
+import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -11,12 +11,12 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import Dashboard from "./views/Dashboard.vue"
 import Movie from "./views/Movie.vue"
 
+
 Vue.config.productionTip = false
 
 Vue.use(BootstrapVue)
 Vue.use(BootstrapVueIcons)
 Vue.use(VueRouter)
-Vue.component("BPlayBtnFill", BIconPlayBtnFill)
 
 const routes = [
     { path: '/', component: Dashboard },

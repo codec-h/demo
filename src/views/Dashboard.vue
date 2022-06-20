@@ -1,9 +1,15 @@
 <template>
-  <div class="container">
-    <div class="d-flex">
-      <transition-group name="company" tag="ul" class="content__list">
+  <div class="container pt-2">
+    <div class="heading-container">
+      <h3 style="text-align: left">Top Rated movies</h3>
+    </div>
+    <div class="row pr-3 pl-3">
+      <div
+        class="col-sm-6 col-md-4 col-lg-3 col-xl-2 hover-blank-color"
+        v-for="movie in this.movies"
+        :key="movie.id"
+      >
         <MovieCard
-          v-for="movie in this.movies"
           class="hover-blank-color"
           :key="movie.id"
           :movieId="movie.id"
@@ -14,7 +20,7 @@
             'https://image.tmdb.org/t/p/w500/' + movie.poster_path
           "
         />
-      </transition-group>
+      </div>
     </div>
   </div>
 </template>
@@ -42,6 +48,10 @@ export default {
 </script>
 
 <style scoped>
+.heading-container {
+  width: 100%;
+  padding: 10px;
+}
 .container {
   display: flex;
   flex-wrap: wrap;

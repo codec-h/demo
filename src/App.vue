@@ -28,9 +28,7 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
-/* .row {
-  margin: 0 !important;
-} */
+
 /* @media(max-width:500px) {
   #body{
     padding-top: 60px;

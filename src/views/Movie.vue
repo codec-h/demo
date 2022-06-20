@@ -38,52 +38,74 @@
         </div>
       </div>
     </div>
-    <div class="row mt-4">
-      <div class="col-sm-6">
-        <label>Trailer & Clips</label>
-        <div class="d-flex pl-2 pr-2">
+    <div class="row mt-4 row-margin">
+      <div class="col-sm-12 mt-4">
+        <h2 class="heading">Trailer & Clips</h2>
+        <div class="row pr-3 pl-3 card-deck">
           <div
-            class="card-wrap"
+            class="col-sm-6 col-md-4 col-lg-3 col-xl-2"
             v-for="trailer in this.movieTrailerDetail"
-            style="cursor: pointer"
             :key="trailer.key"
+            @click="viewTrailer(trailer.key)"
           >
-            <div class="card">
-              <div class="row" @click="viewTrailer(trailer.key)">
-                {{ trailer.name }}
+            <div class="card pr-2 pl-2" style="margin: 10px">
+              <img
+                class="card-img-top thumbnail"
+                :src="
+                  'https://img.youtube.com/vi/' +
+                  trailer.key +
+                  '/maxresdefault.jpg'
+                "
+                :alt="trailer.name"
+              />
+              <div class="card-body">
+                <h5 class="card-title">{{ trailer.name }}</h5>
               </div>
-              <div class="row d-flex justify-content-center">
-                <b-icon-play-btn-fill
-                  font-scale="2.5"
+              <div
+                class="card-footer button-play"
+                @click="viewTrailer(trailer.key)"
+              >
+                <b-icon-youtube
                   style="color: red"
-                ></b-icon-play-btn-fill>
+                  class="mr-2"
+                ></b-icon-youtube>
+                Watch Now
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-sm-6">
-        <div v-if="isVideoLoaded">
-          <LazyYoutube
-            class="pr-4 pl-4"
-            style="border-radius: 7px"
-            max-width="720px"
-            :src="'https://www.youtube.com/watch?v=' + this.selectedTrailer"
-          />
-        </div>
+    </div>
+
+    <!-- copy this stuff and down -->
+    <div id="video-popup-overlay" v-if="showTrailer"></div>
+    <div id="video-popup-container" v-if="showTrailer">
+      <div class="d-flex justify-content-end close">
+        <span
+          @click="
+            () => {
+              showTrailer = false;
+            }
+          "
+          ><b-btn-close></b-btn-close
+        ></span>
       </div>
+      <LazyYoutube
+        class=""
+        max-width="100%"
+        style="border-radius: 7px;width=100%"
+        :src="'https://www.youtube.com/watch?v=' + this.selectedTrailer"
+      />
+      <!-- <div id="video-popup-iframe-container"></div> -->
     </div>
   </div>
 </template>
 
 <script>
 import { LazyYoutube } from "vue-lazytube";
-
 export default {
   name: "Movie",
-  components: {
-    LazyYoutube,
-  },
+  components: { LazyYoutube },
   created() {
     fetch(
       "https://api.themoviedb.org/3/movie/" +
@@ -99,7 +121,10 @@ export default {
   methods: {
     viewTrailer(trailerKey) {
       this.selectedTrailer = trailerKey;
-      this.isVideoLoaded = true;
+      this.showTrailer = true;
+    },
+    closeVideoPopUp() {
+      this.showTrailer = false;
     },
     getMovieTrailerDetail(movieId) {
       fetch(
@@ -126,14 +151,168 @@ export default {
       isVideoLoaded: false,
       movieTrailerDetail: {},
       selectedTrailer: "",
+      showTrailer: false,
     };
   },
 };
 </script>
 
 <style scoped>
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.button-play {
+  cursor: pointer;
+}
+.close {
+  z-index: 1500;
+  color: white;
+  cursor: pointer;
+}
+@media (min-width: 1400px) {
+  #video-popup-container {
+    display: block;
+    position: fixed;
+    left: 0;
+    top: 120px;
+    z-index: 996;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: 60%; /* Need a specific value to work */
+    background-color: rgba(255, 255, 255, 0);
+  }
+}
+@media (max-width: 1399px) {
+  #video-popup-container {
+    display: block;
+    position: fixed;
+    left: 0;
+    top: 120px;
+    z-index: 996;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%; /* Need a specific value to work */
+    background-color: rgba(255, 255, 255, 0);
+  }
+}
+
+#video-popup-close {
+  cursor: pointer;
+  position: absolute;
+  right: -10px;
+  top: -10px;
+  z-index: 998;
+  width: 25px;
+  height: 25px;
+  border-radius: 25px;
+  text-align: center;
+  font-size: 12px;
+  background-color: #000;
+  line-height: 25px;
+  color: #fff;
+}
+
+#video-popup-iframe-container {
+  position: absolute;
+  z-index: 997;
+  width: 100%;
+  padding-bottom: 56.25%;
+  border: 2px solid #000;
+  border-radius: 2px;
+  background-color: #000;
+}
+
+#video-popup-iframe {
+  z-index: 999;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background-color: #000;
+}
+
+#video-popup-overlay {
+  display: block;
+  position: fixed;
+  z-index: 995;
+  top: 0;
+  background-color: #000;
+  opacity: 0.8;
+  width: 100%;
+  height: 100%;
+}
+
+#video-popup-close:hover {
+  color: #de0023;
+}
+
 @import url("https://fonts.googleapis.com/css?family=Poppins");
 @import url("https://fonts.googleapis.com/css?family=Montserrat");
+.card-img-top {
+  border-radius: 7px;
+}
+.card-deck {
+  padding: 40px;
+  justify-content: left;
+}
+.card-footer {
+  background-color: white;
+}
+.card-deck .card {
+  margin: 0 0 1rem;
+  padding: 15px;
+}
+.card-title {
+  font-size: 14px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .card-deck .card {
+    -ms-flex: 0 0 32%;
+    flex: 0 1 32%;
+  }
+  .thumbnail {
+    max-height: 390px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1499px) {
+  .card-deck .card {
+    -ms-flex: 0 0 24%;
+    flex: 0 0 24%;
+  }
+  .thumbnail {
+    max-height: 160px;
+  }
+}
+
+@media (min-width: 1500px) {
+  .card-deck .card {
+    -ms-flex: 0 0 16%;
+    flex: 0 0 18%;
+  }
+  .thumbnail {
+    max-height: 180px;
+  }
+}
+
+.heading {
+  text-align: start;
+  padding: 5px 20px;
+}
+.clip-title {
+  text-align: center;
+  margin-left: 10px;
+}
 .card-wrap {
   flex: 0 0 33.333%;
   display: flex;
@@ -143,7 +322,11 @@ export default {
 .card {
   padding: 20px;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
-  flex: 0 0 100%;
+  flex: 0 1 100% !important;
+}
+.row > [class*="col-"] {
+  display: flex;
+  flex-direction: column;
 }
 .hero {
   text-align: center;
@@ -385,5 +568,8 @@ span.title {
   letter-spacing: 2px;
   text-transform: uppercase;
   color: #fbbd61;
+}
+.row-margin {
+  margin: 0px !important;
 }
 </style>

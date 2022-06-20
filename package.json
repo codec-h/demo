@@ -10,6 +10,8 @@
   "dependencies": {
     "bootstrap-vue": "^2.22.0",
     "core-js": "^3.6.5",
+    "magnific-popup": "^1.1.0",
+    "mediabox": "^1.1.3",
     "stats-js": "^1.0.1",
     "vue": "^2.6.11",
     "vue-lazytube": "^1.1.1",
