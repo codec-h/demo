@@ -6,7 +6,7 @@
           <strong>Top Rated movies</strong>
         </h4>
       </div>
-      <div class="col-sm-6 d-flex justify-content-flex-end">
+      <div class="col-sm-6 d-flex" style="justify-content: end">
         <button v-b-modal.modal-xl class="btn btn-color ml-auto">
           <b-icon-filter scale="2"></b-icon-filter
           ><span class="pl-3">Filter</span>
