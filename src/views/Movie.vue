@@ -365,8 +365,8 @@ export default {
   flex: 0 1 100% !important;
 }
 .card-body {
-  padding-top: 10px;
   text-align: start;
+  padding: 10px 0 0 0;
 }
 .row > [class*="col-"] {
   display: flex;

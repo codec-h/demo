@@ -1,44 +1,23 @@
 <template>
-  <div class="navigation-wrap bg-light start-header start-style">
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <nav class="navbar navbar-expand-md navbar-light">
-            <router-link to="/" class="navbar-brand"
-              ><b-icon-film scale="1.7" style="color: #fc7b54"></b-icon-film
-              ><span class="ml-3" style="color: #fc7b54">Critics</span>
-            </router-link>
-
-            <button
-              class="navbar-toggler"
-              type="button"
-              @click="toggleResponsiveMenu"
-              data-toggle="collapse"
-              data-target="#navbarSupportedContent"
-              aria-controls="navbarSupportedContent"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav ml-auto py-4 py-md-0">
-                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
-                  <router-link
-                    to="/"
-                    active-class="active-menu"
-                    class="nav-link"
-                    >Home</router-link
-                  >
-                </li>
-              </ul>
-            </div>
-          </nav>
-        </div>
+  <header class="header" id="header">
+    <nav class="navbar container">
+      <div class="brand">
+        <b-icon-film scale="1.5"></b-icon-film><span class="pl-3">Critics</span>
       </div>
-    </div>
-  </div>
+      <div class="menu" id="menu">
+        <ul class="menu-list">
+          <li class="menu-item">
+            <router-link to="/" class="row menu-link is-active">
+              <div class="row d-flex margin-top-5">
+                <b-icon-house scale="1.5" class="pr-3"></b-icon-house>
+                <span class="menu-name pl-2">Home</span>
+              </div>
+            </router-link>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
 </template>
 
 <script>
@@ -60,106 +39,144 @@ export default {
 </script>
 
 <style scoped>
-.start-header {
-  opacity: 1;
-  transform: translateY(0);
-  padding: 20px 0;
-  box-shadow: 0 10px 30px 0 rgba(138, 155, 165, 0.15);
-  -webkit-transition: all 0.3s ease-out;
-  transition: all 0.3s ease-out;
+.container {
+  max-width: 75rem;
+  height: auto;
+  margin: 0 auto;
+  padding: 0 1.25rem;
 }
-.start-header.scroll-on {
-  box-shadow: 0 5px 10px 0 rgba(138, 155, 165, 0.15);
-  padding: 10px 0;
-  -webkit-transition: all 0.3s ease-out;
-  transition: all 0.3s ease-out;
+.brand {
+  font-family: inherit;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: #fc7b54;
+  text-transform: uppercase;
 }
-.start-header.scroll-on .navbar-brand img {
-  height: 24px;
-  -webkit-transition: all 0.3s ease-out;
-  transition: all 0.3s ease-out;
-}
-.navigation-wrap {
+.header {
   position: fixed;
-  width: 100%;
+  padding: 10px;
   top: 0;
   left: 0;
-  z-index: 1000;
-  height: 60px;
-  -webkit-transition: all 0.3s ease-out;
-  transition: all 0.3s ease-out;
-}
-.navigation-wrap .container {
-  margin-top: -10px;
+  background-color: white;
+  width: 100%;
+  height: 80px !important;
+  z-index: 100;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  -webkit-box-shadow: 0px 7px 12px -11px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 7px 12px -11px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 7px 12px -11px rgba(0, 0, 0, 0.75);
 }
 .navbar {
-  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 4rem;
+  margin: 0 auto;
 }
-.navbar-brand img {
-  height: 28px;
-  width: auto;
-  display: block;
-  filter: brightness(10%);
-  -webkit-transition: all 0.3s ease-out;
-  transition: all 0.3s ease-out;
+.menu {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  display: grid;
+  align-content: center;
+  width: 100%;
+  height: 3.5rem;
+  padding: 0 1rem;
+  border-top-left-radius: 1.5rem;
+  border-top-right-radius: 1.5rem;
+  background: white;
+  -webkit-box-shadow: 0px -7px 12px -11px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px -7px 12px -11px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px -7px 12px -11px rgba(0, 0, 0, 0.75);
 }
-.navbar-toggler {
-  float: right;
-  border: none;
-  padding-right: 0;
+.menu-list {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
 }
-.active-menu {
+.menu-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 7px 25px;
+  margin-top: 10px;
   color: white !important;
   background-color: #fc7b54;
-  border-radius: 10px;
-  padding: 7px 10px !important;
-}
-.navbar-toggler:active,
-.navbar-toggler:focus {
+  border-radius: 12px;
+  justify-content: center;
+  border: none;
   outline: none;
 }
-.navbar-toggler[aria-expanded="true"] .navbar-toggler-icon:after {
-  transform: rotate(45deg);
+.menu-link.is-active {
+  position: relative;
+  color: teal;
+  transition: all 0.35s ease;
 }
-.navbar-toggler[aria-expanded="true"] .navbar-toggler-icon:before {
-  transform: translateY(8px) rotate(-45deg);
+.menu-icon {
+  font-size: 1.35rem;
+  line-height: 1;
+  color: inherit;
 }
-.navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
-  border-color: transparent;
-}
-.nav-link {
+.menu-name {
+  display: none;
+  font-family: inherit;
+  font-size: 0.875rem;
   font-weight: 500;
-  transition: all 200ms linear;
+  line-height: 1.25;
+  visibility: hidden;
+  text-transform: capitalize;
 }
-.nav-link {
-  position: relative;
-  display: inline-block;
+@media only screen and (min-width: 360px) {
+  .menu-name {
+    display: block;
+    visibility: visible;
+  }
 }
-
-.nav-item {
-  position: relative;
-  transition: all 200ms linear;
+@media only screen and (min-width: 576px) {
+  .menu-list {
+    justify-content: center;
+    column-gap: 3rem;
+  }
 }
-
-/* #Primary style
-================================================== */
-
-.bg-light {
-  background-color: #fff !important;
-  transition: all 200ms linear;
-}
-.section {
-  position: relative;
-  width: 100%;
-  display: block;
-}
-.full-height {
-  height: 100vh;
-}
-.over-hide {
-  overflow: hidden;
-}
-.row {
-  margin: 0 !important;
+@media only screen and (min-width: 768px) {
+  .header {
+    background: white;
+    height: 90px;
+    transition: all 0.35s ease-in-out;
+  }
+  .margin-top-5 {
+    margin-top: 5px;
+  }
+  .menu {
+    position: relative;
+    top: 0;
+    right: 0;
+    align-self: end;
+    width: auto;
+    height: auto;
+    background: none;
+    box-shadow: none;
+  }
+  .menu-link:hover {
+    color: teal;
+    transition: all 0.35s ease;
+  }
+  .menu-icon {
+    display: none;
+    visibility: hidden;
+  }
+  .menu-name {
+    list-style: none;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.5;
+    margin-bottom: 0.2rem;
+  }
 }
 </style>

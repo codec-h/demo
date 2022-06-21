@@ -1,24 +1,25 @@
-# belive-top-movies
+# Critics - BeLive Assignment
 
-## Project setup
+## Project Execution Setup
+
+### Clone source code from main branch
+```
+git clone https://github.com/codec-h/demo.git
+```
+
+### Install node-modules
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Running via local PC - Development
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Generating production files
 ```
 npm run build
 ```
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+>This project is by default configured with Base URL as demo. In order to change as per need, please modify publicPath property in vue.config.js

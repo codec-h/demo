@@ -58,7 +58,7 @@ export default {
   width: 100%;
   max-width: 245px;
   max-height: 800px;
-  margin: 2em;
+  margin: 2em auto;
   border-radius: 10px;
   display: inline-block;
 }
@@ -145,8 +145,8 @@ export default {
 @media screen and (max-width: 500px) {
   .movie-card {
     width: 95%;
-    max-width: 95%;
-    margin: 1em;
+    max-width: 245px;
+    margin: 1rem auto;
     display: block;
   }
   .container {

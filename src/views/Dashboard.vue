@@ -29,7 +29,7 @@
       class="row pr-3 pl-3 w-100"
     >
       <div
-        class="col-sm-6 col-md-4 col-lg-3 col-xl-2 hover-blank-color"
+        class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 hover-blank-color"
         v-for="movie in this.movies"
         :key="movie.id"
       >
@@ -185,7 +185,7 @@ export default {
       if (end > this.paginationTopLimit) {
         end = this.paginationTopLimit;
         if (end <= 7) start = this.paginationBottomLimit;
-        else start = end - 7;
+        else start = end - 6;
       }
       for (let iterator = start; iterator <= end; iterator++)
         this.pageNumbers.push(iterator);
@@ -265,6 +265,9 @@ export default {
   margin-right: auto;
   justify-content: center;
 }
+/* .hover-blank-color {
+  max-width: 250px !important;
+} */
 .hover-blank-color:hover {
   text-decoration: none;
   color: gray;
