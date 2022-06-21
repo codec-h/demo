@@ -71,10 +71,9 @@ export default {
   margin: 5px !important;
   padding: 10px 10px 6px 15px !important;
 }
-/* @media(max-width:500px) {
+@media only screen and (max-width: 768px) {
   #body{
-    padding-top: 60px;
+    margin-bottom: 60px;
   }
-  
-} */
+}
 </style>

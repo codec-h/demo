@@ -30,3 +30,15 @@ npm run build
 - bootstrap-vue - To accomodate responsive website
 - vue-lazytube - To inline play Youtube video within the same window 
 - vue-overlay-loading - To show loading animation during API fetch calls and time-consuming process
+
+### Project Folder Structure
+- public
+    - index.html
+- src
+    - assets
+    - components
+    - header
+    - router
+    - views
+    - App.vue
+- main.js
