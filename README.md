@@ -42,3 +42,12 @@ npm run build
     - views
     - App.vue
 - main.js
+
+### Environment Specifications
+```
+$ node -v
+v14.15.4
+
+$ vue --version
+@vue/cli 5.0.4
+```
